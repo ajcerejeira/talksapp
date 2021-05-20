@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="{% url 'talk_list' %}">Talks</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">{{ talk.title }}</li>
+    </ol>
+  </nav>
+  <header class="mt-5 mb-3 d-flex align-items-center">
+    <h1>{{ talk.title }}</h1>
+    <a href="{% url 'talk_update' talk.pk %}" class="btn btn-outline-info ms-auto">Edit</button>
+    <a href="{% url 'talk_delete' talk.pk %}" class="btn btn-outline-danger ms-2">Delete</a>
+  </header>
+
+  <p class="lead">{{ talk.speaker.get_full_name }}</p>
+  <p>{{ talk.description }}</p>
+{% endblock content %}

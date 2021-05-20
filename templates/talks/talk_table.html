@@ -1,0 +1,26 @@
+<table class="table" id="talks-table">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Speaker</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% csrf_token %}
+    {% for talk in talks %}
+      <tr>
+        <th>
+          <a href="{{ talk.get_absolute_url }}">{{ talk.title }}</a>
+         </th>
+        <td>{{ talk.description|truncatechars:60 }}</td>
+        <td>{{ talk.speaker.get_full_name }}</td>
+        <td>
+          <a href="{% url 'talk_update' talk.pk %}" class="btn btn-sm btn-outline-info">Edit</a>
+          <a href="{% url 'talk_delete' talk.pk %}" class="btn btn-sm btn-outline-danger ms-2">Delete</a>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

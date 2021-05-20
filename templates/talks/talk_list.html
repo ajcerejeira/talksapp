@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% load widget_tweaks %}
+
+{% block content %}
+  <header class="d-flex align-items-center mb-3">
+    <h1>Talks</h1>
+    <input class="form-control w-auto ms-auto" type="text" 
+      name="search" placeholder="Type to search talks..." 
+      hx-get="{% url 'talk_search' %}" 
+      hx-trigger="keyup changed delay:500ms" 
+      hx-target="#talks-table" 
+      hx-indicator=".htmx-indicator">
+    <a href="{% url 'talk_create' %}" class="btn btn-success ms-2">Add talk</a>
+  </header>
+
+  {% include "talks/talk_table.html" %}
+{% endblock content %}

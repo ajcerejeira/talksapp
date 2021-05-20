@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% load widget_tweaks %}
+
+{% block content %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="{% url 'talk_list' %}">Talks</a>
+      </li>
+      {% if talk %}
+        <li class="breadcrumb-item">
+          <a href="{% url 'talk_detail' talk.pk %}">{{ talk.title }}</a>
+        </li>
+      {% endif %}
+      <li class="breadcrumb-item active" aria-current="page">{% if talk %}Edit talk{% else %}Add talk{% endif %}</li>
+    </ol>
+  </nav>
+  <h1 class="mt-5 mb-3">{% if talk %}Edit talk{% else %}Add talk{% endif %}</h1>
+  <form method="POST">
+    {% csrf_token %}
+
+    {{ form.title|add_label_class:"form-label" }}
+    {{ form.title|add_class:"form-control mb-3" }}
+
+    {{ form.description|add_label_class:"form-label" }}
+    {{ form.description|add_class:"form-control mb-3" }}
+    
+    {{ form.speaker|add_label_class:"form-label" }}
+    {{ form.speaker|add_class:"form-select mb-4" }}
+
+    {{ form.tags|add_label_class:"form-label" }}
+
+    {% autoescape off %}
+      <div x-data="{tags: {{ talk.tags|default:"[]" }}, newTag: ''}">
+        <input type="hidden" name="tags" x-bind:value="JSON.stringify(tags)">
+        <div class="mb-3">
+          <input class="form-control mb-2" placeholder="Add tag..."
+            @keydown.enter.prevent="if (newTag.trim() !== '') tags.push(newTag.trim()); newTag = ''"
+            x-model="newTag"
+          >
+          <template x-for="tag in tags" :key="tag">
+            <span class="badge bg-primary d-inline-flex align-items-center">
+              <span x-text="tag" class="me-2"></span>
+              <button type="button" class="btn-close btn-close-white" @click="tags = tags.filter(i => i !== tag)"></button>
+            </span>
+          </template>
+        </div>
+      </div>
+    {% endautoescape %}
+    <hr>
+
+    {% if talk %}
+      <button type="submit" class="btn btn-lg btn-success">
+        Save
+      </button>
+      <a href="{% url 'talk_detail' talk.pk %}" class="btn btn-lg btn-light ms-2">Cancel</a>
+    {% else %}
+      <button type="submit" class="btn btn-lg btn-success">
+        Add talk
+      </button>
+    {% endif %}
+  </form>
+{% endblock content %}
